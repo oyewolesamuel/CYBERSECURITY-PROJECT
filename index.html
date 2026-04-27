@@ -1,152 +1,183 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EncryptIT — Secure Message Encryptor</title>
-
-  <!-- Bootstrap -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EncryptIT</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono&family=Barlow:wght@300;400;700;900&display=swap" rel="stylesheet">
 
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: #030609;
+      color: #c8d8e8;
+      font-family: 'Barlow', sans-serif;
+    }
 
-  <!-- Custom CSS -->
-  <link rel="stylesheet" href="index.css">
+    .mono { font-family: 'Space Mono', monospace; }
+
+    .accent { 
+      color: #00ffaa; 
+      font-size: 25px;
+    }
+    .btn-accent {
+      background: #00ffaa;
+      color: #030609;
+      font-weight: 700;
+    }
+
+    .btn-accent:hover {
+      background: #00e699;
+    }
+
+    .hero {
+      min-height: 80vh;
+      display: flex;
+      align-items: center;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-weight: 900;
+      font-size: clamp(2.5rem, 8vw, 8rem);
+      line-height: 1.1;
+    }
+
+    .section {
+      padding: 100px 0;
+    }
+
+    .card-dark {
+      background: #0b1524;
+      border: 1px solid rgba(0,255,170,0.1);
+    }
+
+    .terminal {
+      background: #0b1524;
+      border-radius: 10px;
+      border: 1px solid rgba(0,255,170,0.2);
+      font-family: 'Space Mono', monospace;
+      font-size: 13px;
+    }
+
+    .term-bar {
+      background: rgba(0,0,0,0.4);
+      padding: 10px;
+      border-bottom: 1px solid rgba(0,255,170,0.1);
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 5px;
+    }
+
+    .red { background: #ff5f57; }
+    .yellow { background: #febc2e; }
+    .green { background: #28c840; }
+
+    footer {
+      border-top: 1px solid rgba(0,255,170,0.1);
+      padding: 30px 0;
+      text-align: center;
+    }
+  </style>
 </head>
 
 <body>
+<nav class="navbar navbar-dark navbar-expand-lg fixed-top bg-dark bg-opacity-75 backdrop-blur">
+  <div class="container">
+    <a class="navbar-brand mono accent" href="#">ENCRYPTIT</a>
 
-<div class="wrap">
-
-  <!-- HEADER -->
-  <header>
-    <div class="logo">
-      <div class="logo-icon">
-        <svg viewBox="0 0 24 24" fill="none">
-          <rect x="5" y="11" width="14" height="10" rx="2" fill="white" opacity="0.9"/>
-          <path d="M8 11V7a4 4 0 018 0v4" stroke="white" stroke-width="2"/>
-          <circle cx="12" cy="16" r="1.5" fill="#0ea5e9"/>
-        </svg>
-      </div>
-      <h1>EncryptIT!</h1>
-    </div>
-  </header>
-
-  <!-- MAIN CARD -->
-  <div class="card">
-
-    <!-- MODE -->
-    <div class="mode-toggle">
-      <button class="mode-btn active" id="encryptBtn" onclick="setMode('encrypt')">
-        Encrypt
-      </button>
-      <button class="mode-btn" id="decryptBtn" onclick="setMode('decrypt')">
-        Decrypt
-      </button>
-    </div>
-
-    <!-- MESSAGE -->
-    <div class="field">
-      <label id="msgLabel">Plaintext message</label>
-      <textarea id="message" placeholder="Type or paste your message here…"></textarea>
-    </div>
-
-    <!-- PASSWORD -->
-    <div class="field">
-      <label>Passphrase</label>
-
-      <div class="input-row">
-        <input type="password" id="password" placeholder="Enter a strong passphrase…" >
-
-        <button class="icon-btn" onclick="togglePassword()" title="Show/hide">👁</button>
-        <!-- <button class="icon-btn" onclick="generatePassword()" title="Generate password">⚡</button> -->
-      </div>
-
-      <div class="strength-bar">
-        <div class="strength-fill" id="strengthFill"></div>
-      </div>
-    </div>
-
-    <!-- ACTION -->
-    <button class="action-btn" id="actionBtn" onclick="process()">
-      <span id="actionLabel">Encrypt Message</span>
+    <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#nav">
+      <span class="navbar-toggler-icon"></span>
     </button>
 
-    <hr class="divider">
+    <div id="nav" class="collapse navbar-collapse">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="#how">How</a></li>
+      </ul>
 
-    <!-- RESULT (optional fallback) -->
-    <div class="field">
-      <label id="resultLabel">Encrypted output</label>
-
-      <div class="result-wrap">
-        <!-- ✅ FIXED BROKEN TEXTAREA -->
-        <textarea id="result" readonly placeholder="Result will appear here…"></textarea>
-
-        <!-- <button class="copy-inline" onclick="copyResult()" title="Copy">
-          Copy
-        </button> -->
-      </div>
-    </div>
-
-    <!-- ACTION ROW -->
-    <div class="bottom-row">
-      <button class="sec-btn" onclick="copyResult()">Copy result</button>
-      <button class="sec-btn" onclick="clearAll()">Clear</button>
-    </div>
-
-    <!-- (optional, can remove since using modal now) -->
-    <div id="status"></div>
-
-  </div>
-
-  <!-- FOOTER -->
-  <footer>
-    <span>Runs locally</span>
-    <span>No data stored</span>
-    <span>Web Crypto API</span>
-  </footer>
-
-</div>
-
-<!-- ========================= -->
-<!-- SMART MODAL -->
-<!-- ========================= -->
-<div class="modal fade" id="mainModal">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content bg-dark text-light">
-
-      <div class="modal-header">
-        <h5 class="modal-title" id="modalTitle">Result</h5>
-        <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-      </div>
-
-      <div class="modal-body">
-
-        <p id="modalMessage" class="mb-3"></p>
-
-        <textarea id="modalResultText" class="form-control mono" rows="5" readonly></textarea>
-
-      </div>
-
-      <div class="modal-footer">
-        <button class="btn btn-success" id="copyBtn" onclick="copyModalResult()">Copy</button>
-        <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-      </div>
-
+      <a href="index.html" class="btn btn-accent ms-3 mono">Launch App</a>
     </div>
   </div>
-</div>
+</nav>
+<section class="hero">
+  <div class="container">
+  <h1>
+  LOCK YOUR <br>
+  <span class="stroke">SECRETS NOW!!!</span>
+</h1>
 
-<!-- ========================= -->
-<!-- SCRIPTS (ORDER MATTERS) -->
-<!-- ========================= -->
+    <div class="d-flex justify-content-center gap-3 flex-wrap">
+      <a href="index.html" class="btn btn-accent px-4">Start Encrypting</a>
+      <a href="#how" class="btn btn-outline-light">How it Works</a>
+    </div>
 
-<!-- Bootstrap FIRST -->
+    <div class="terminal mt-5 text-start mx-auto" style="max-width:700px;">
+      <div class="term-bar">
+        <span class="dot red"></span>
+        <span class="dot yellow"></span>
+        <span class="dot green"></span>
+      </div>
+
+      <div class="p-3">
+        <div>$ encrypt --AES256</div>
+        <div>> message: "Meet me at midnight"</div>
+        <div class="text-success">✓ encrypted successfully</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="how" class="section bg-light">
+  <div class="container text-center">
+
+    <h2 class="fw-bold mb-5 fs-1 text-dark">HOW IT WORKS</h2>
+
+    <div class="row g-4">
+
+      <div class="col-md-3">
+        <h3 class="accent fs-1 text-dark fw-bolder">01</h3>
+        <p class="fw-bolder text-dark fs-2">Write your message</p>
+      </div>
+ 
+      <div class="col-md-3">
+        <h3 class="accent fs-1 text-dark fw-bolder">02</h3>
+        <p class="fw-bolder text-dark fs-2">Set passphrase</p>
+      </div>
+
+      <div class="col-md-3">
+        <h3 class="accent fs-1 text-dark fw-bolder">03</h3>
+        <p class="fw-bolder text-dark fs-2">Encrypt</p>
+      </div>
+
+      <div class="col-md-3">
+        <h3 class="accent fs-1 text-dark fw-bolder">04</h3>
+        <p class="fw-bolder text-dark fs-2">Share securely</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="section text-center">
+  <div class="container">
+    <h2 class="fw-bold mb-3">Ready to secure your messages?</h2>
+    <a href="index.html" class="btn btn-accent px-5 py-3">
+      Open EncryptIT
+    </a>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p class="mono text-active">ENCRYPTIT — Runs locally. No data stored.</p>
+  </div>
+</footer>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-<!-- Your JS AFTER -->
-<script src="index.js"></script>
-
 </body>
 </html>

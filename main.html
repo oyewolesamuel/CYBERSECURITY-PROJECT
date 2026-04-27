@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EncryptIT — Secure Message Encryptor</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+
+<div class="wrap">
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24" fill="none">
+          <rect x="5" y="11" width="14" height="10" rx="2" fill="white" opacity="0.9"/>
+          <path d="M8 11V7a4 4 0 018 0v4" stroke="white" stroke-width="2"/>
+          <circle cx="12" cy="16" r="1.5" fill="#0ea5e9"/>
+        </svg>
+      </div>
+      <h1>EncryptIT!</h1>
+    </div>
+  </header>
+
+  <!-- MAIN CARD -->
+  <div class="card">
+
+    <!-- MODE -->
+    <div class="mode-toggle">
+      <button class="mode-btn active" id="encryptBtn" onclick="setMode('encrypt')">
+        Encrypt
+      </button>
+      <button class="mode-btn" id="decryptBtn" onclick="setMode('decrypt')">
+        Decrypt
+      </button>
+    </div>
+
+    <!-- MESSAGE -->
+    <div class="field">
+      <label id="msgLabel">Plaintext message</label>
+      <textarea id="message" placeholder="Type or paste your message here…"></textarea>
+    </div>
+
+    <!-- PASSWORD -->
+    <div class="field">
+      <label>Passphrase</label>
+
+      <div class="input-row">
+        <input type="password" id="password" placeholder="Enter a strong passphrase…" >
+
+        <button class="icon-btn" onclick="togglePassword()" title="Show/hide">👁</button>
+        <!-- <button class="icon-btn" onclick="generatePassword()" title="Generate password">⚡</button> -->
+      </div>
+
+      <div class="strength-bar">
+        <div class="strength-fill" id="strengthFill"></div>
+      </div>
+    </div>
+
+    <!-- ACTION -->
+    <button class="action-btn" id="actionBtn" onclick="process()">
+      <span id="actionLabel">Encrypt Message</span>
+    </button>
+
+    <hr class="divider">
+
+    <!-- RESULT (optional fallback) -->
+    <div class="field">
+      <label id="resultLabel">Encrypted output</label>
+
+      <div class="result-wrap">
+        <!-- ✅ FIXED BROKEN TEXTAREA -->
+        <textarea id="result" readonly placeholder="Result will appear here…"></textarea>
+
+        <!-- <button class="copy-inline" onclick="copyResult()" title="Copy">
+          Copy
+        </button> -->
+      </div>
+    </div>
+
+    <!-- ACTION ROW -->
+    <div class="bottom-row">
+      <button class="sec-btn" onclick="copyResult()">Copy result</button>
+      <button class="sec-btn" onclick="clearAll()">Clear</button>
+    </div>
+
+    <!-- (optional, can remove since using modal now) -->
+    <div id="status"></div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <span>Runs locally</span>
+    <span>No data stored</span>
+    <span>Web Crypto API</span>
+  </footer>
+
+</div>
+
+<!-- ========================= -->
+<!-- SMART MODAL -->
+<!-- ========================= -->
+<div class="modal fade" id="mainModal">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-dark text-light">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalTitle">Result</h5>
+        <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+
+        <p id="modalMessage" class="mb-3"></p>
+
+        <textarea id="modalResultText" class="form-control mono" rows="5" readonly></textarea>
+
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-success" id="copyBtn" onclick="copyModalResult()">Copy</button>
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ========================= -->
+<!-- SCRIPTS (ORDER MATTERS) -->
+<!-- ========================= -->
+
+<!-- Bootstrap FIRST -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Your JS AFTER -->
+<script src="index.js"></script>
+
+</body>
+</html>
